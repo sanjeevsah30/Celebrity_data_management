@@ -25,8 +25,10 @@ const CelebrityCard = ({ celebritydata, id }) => {
   const [description, setDescription] = useState(celebritydata?.description);
   const [isEdited, setIsEdited] = useState(true);
   const [expanded, setExpanded] = React.useState(null);
+  const [valid, setValid] = useState(true);
 
   const handleCountryChange = (event) => {
+    setValid(/^[a-zA-Z]*$/.test(event.target.value));
     setCountry(event.target.value);
     setIsEdited(false);
   };
@@ -141,13 +143,22 @@ const CelebrityCard = ({ celebritydata, id }) => {
                     {celebritydata?.country}
                   </Typography>
                 ) : (
-                  <input
-                    type='text'
-                    className='input-field'
-                    value={country}
-                    onChange={handleCountryChange}
-                    required
-                  />
+                  <>
+                    {" "}
+                    <input
+                      type='text'
+                      className='input-field'
+                      value={country}
+                      onChange={handleCountryChange}
+                      required
+                      pattern='[A-Za-z]'
+                    />
+                    {!valid && (
+                      <p style={{ color: "red", fontSize: "10px" }}>
+                        Only alphabets allowed
+                      </p>
+                    )}
+                  </>
                 )}
               </Grid>
             </Grid>
@@ -219,7 +230,7 @@ const CelebrityCard = ({ celebritydata, id }) => {
                 <MdDone
                   className={!isEdited ? "edit-button2" : "active-edit-button2"}
                   onClick={(e) => {
-                    if (isEdited == false) {
+                    if (valid && isEdited == false ) {
                       updateObject(celebritydata.id, {
                         gender: gender,
                         country: country,
