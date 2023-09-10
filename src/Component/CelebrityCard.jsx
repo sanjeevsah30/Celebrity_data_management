@@ -28,7 +28,7 @@ const CelebrityCard = ({ celebritydata, id }) => {
   const [valid, setValid] = useState(true);
 
   const handleCountryChange = (event) => {
-    setValid(/^[a-zA-Z]*$/.test(event.target.value));
+    setValid(/^[a-zA-Z\s]*$/.test(event.target.value));
     setCountry(event.target.value);
     setIsEdited(false);
   };
