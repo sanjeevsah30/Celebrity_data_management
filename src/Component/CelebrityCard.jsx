@@ -163,7 +163,6 @@ const CelebrityCard = ({ celebritydata, id }) => {
                   className='input-description'
                   value={description}
                   onChange={handleDescriptionChange}
-                  minlength='50'
                   required
                 />
               )}
