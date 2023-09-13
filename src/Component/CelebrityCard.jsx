@@ -19,13 +19,25 @@ const CelebrityCard = ({ celebritydata, id }) => {
   const { state, dispatch } = useMyContext();
   const [editClick, setEditClick] = useState(true);
   const [DeleteBox, setDeleteBox] = useState(false);
+
   const [country, setCountry] = useState(celebritydata.country);
+  const [firstName, setFirstName] = useState(`${celebritydata?.first}`);
+  const [lastName, setLastName] = useState(`${celebritydata?.last}`);
   const [gender, setGender] = useState(celebritydata?.gender);
   const [age, setAge] = useState(calculateAge(celebritydata?.dob));
   const [description, setDescription] = useState(celebritydata?.description);
   const [isEdited, setIsEdited] = useState(true);
   const [expanded, setExpanded] = React.useState(null);
   const [valid, setValid] = useState(true);
+
+  const handleFirstNameChange = (event) => {
+    setFirstName(event.target.value);
+    setIsEdited(false);
+  };
+  const handleLastNameChange = (event) => {
+    setLastName(event.target.value);
+    setIsEdited(false);
+  };
 
   const handleCountryChange = (event) => {
     setValid(/^[a-zA-Z\s]*$/.test(event.target.value));
@@ -85,9 +97,32 @@ const CelebrityCard = ({ celebritydata, id }) => {
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Box className='summary'>
             <img src={celebritydata?.picture} className='user-image' alt='' />
-            <Typography className='heading-label'>
-              {celebritydata?.first} {celebritydata?.last}{" "}
-            </Typography>
+            {editClick ? (
+              <Typography className='heading-label'>
+                {celebritydata?.first} {celebritydata?.last}
+              </Typography>
+            ) : (
+              <>
+                <input
+                  className='input-field'
+                  type='text'
+                  placeholder='Enter First Name'
+                  value={firstName}
+                  onChange={handleFirstNameChange}
+                  required
+                  style={{ marginLeft: "1rem" }}
+                />
+                <input
+                  className='input-field'
+                  type='text'
+                  placeholder='Enter last Name'
+                  value={lastName}
+                  onChange={handleLastNameChange}
+                  required
+                  style={{ marginLeft: "1rem" }}
+                />
+              </>
+            )}
           </Box>
         </AccordionSummary>
         <AccordionDetails>
@@ -151,6 +186,7 @@ const CelebrityCard = ({ celebritydata, id }) => {
                       value={country}
                       onChange={handleCountryChange}
                       required
+                      placeholder='Enter Country Name'
                       pattern='[A-Za-z]'
                     />
                     {!valid && (
@@ -230,12 +266,13 @@ const CelebrityCard = ({ celebritydata, id }) => {
                 <MdDone
                   className={!isEdited ? "edit-button2" : "active-edit-button2"}
                   onClick={(e) => {
-                    if (valid && isEdited == false ) {
+                    if (valid && isEdited == false) {
                       updateObject(celebritydata.id, {
+                        first: firstName,
+                        last: lastName,
                         gender: gender,
                         country: country,
                         description: description,
-                        // dob: age,
                       });
                       setEditClick(true);
                     }
